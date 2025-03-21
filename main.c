@@ -35,21 +35,20 @@ const char* binary(int num) {
     return reversestring(value);
 }
 
-void base64(char key[]) {
+void base64(char phrase[]) {
     char prebinary[1000], binarys[100][7], base64_char[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";  
     prebinary[0] = '\0';
     int cont = 0, j = 0, binaryascii[100] = {0};  
-    size_t length = strlen(key);
+    size_t length = strlen(phrase);
+    
 
-    // Convert the input string to binary
     for (int i = 0; i < length; i++) {
-        strcat(prebinary, binary(ascii(key[i])));
+        strcat(prebinary, binary(ascii(phrase[i])));
     }
-    strcat(prebinary, "00001010");  // Add newline character as binary (0x0A)
+    strcat(prebinary, "00001010");  
 
     int preblen = strlen(prebinary);
     
-    // Break the binary string into 6-bit chunks
     for (int i = 0; i < preblen; i++) {
         binarys[cont][j] = prebinary[i]; 
         j++;
@@ -61,20 +60,17 @@ void base64(char key[]) {
         }
     }
 
-    // Padding the last binary chunk if needed
     for (int i = 0; i < strlen(binarys[cont]); i++) {
         if(binarys[cont][i] != '0' && binarys[cont][i] != '1') {
             binarys[cont][i] = '0';
         }
     }
 
-    // Reverse the bits in each chunk and ensure it has 6 bits
     for (int i = 0; i <= cont; i++) {
         binarys[i][6] = '\0';
         reversestring(binarys[i]);
     }
 
-    // Convert each 6-bit binary chunk to decimal and then to base64
     int cont24 = 0;
     for (int i = 0; i < cont; i++) {
         binaryascii[i] = 0; 
@@ -83,6 +79,7 @@ void base64(char key[]) {
                 binaryascii[i] += pow(2, j);
             }
         }
+
         printf("\n%s\n", binarys[i]);
         cont24++;
         printf("%c", base64_char[binaryascii[i]]);
@@ -101,12 +98,50 @@ void base64(char key[]) {
         }
     }
     printf("\n\n\n");
-    
 }
+
+void hexdecimal(char phrase[]){
+    int firstletter, secondletter;
+    
+    size_t length = strlen(phrase);
+    for (int i = 0; i < length; i++) {
+        firstletter = ascii(phrase[i])/16;
+        secondletter = ascii(phrase[i])%16;
+        printf("%d", firstletter);
+        if(secondletter<10){
+            printf("%d", secondletter);
+        }else{
+            switch(secondletter){
+                case 10:
+                    printf("A");
+                    break;
+                case 11:
+                    printf("B");
+                    break;
+                case 12:
+                    printf("C");
+                    break;
+                case 13:
+                    printf("D");
+                    break;
+                case 14:
+                    printf("E");
+                    break;
+                case 15:
+                    printf("F");
+                    break;
+            }
+        }
+
+    }
+
+}
+
+
 
 int main() {
     scanf("%[^\n]", key);  
     printf("\n");
-    base64(key);  
+    hexdecimal(key);  
     return 0;
 }
